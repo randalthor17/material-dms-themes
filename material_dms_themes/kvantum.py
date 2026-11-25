@@ -158,7 +158,8 @@ def build(p: Palette):
     element(svg, "tab", 12, 12, {k: v for k, v in {**flat8, "focused": (tint(PRI, .08), None),
                                                    "pressed": (tint(PRI, .10), None)}.items() if k != "toggled"})
     underline_box(svg, "tab-toggled", 12, PRI)  # the selected tab: DMS marks it with a 3 px primary underline
-    element(svg, "itemview", 8, 8, {**flat8, "toggled": (solid(SEC), None)})
+    # a selected row is filled with primary: Kirigami (and KDE's scheme) draw its text in "on primary", so a darker fill is unreadable
+    element(svg, "itemview", 8, 8, {**flat8, "toggled": (solid(PRI), None)})
     element(svg, "menuitem", 12, 12, {**flat8, "toggled": (tint(FG, .08), None)})
     element(svg, "menubaritem", 12, 12, {**flat8, "toggled": (tint(FG, .10), None)})
     # text fields: filled (container high), 4 px corners, 1 px outline-variant, a 2 px primary ring when focused
@@ -364,7 +365,7 @@ def config(p: Palette):
         "ProgressbarContents": {"inherits": "PanelButtonCommand", "frame": "true", "interior": "true",
                                 **frame(4, "progress-pattern", "progress-pattern")},
         "ItemView": {"inherits": "PanelButtonCommand", **frame(8, "itemview", "itemview"),
-                     **text(FG, **{"text.toggle.color": ON_SEC}), "text.margin": "0", "text.margin.left": "6",
+                     **text(FG, **{"text.toggle.color": ON_PRI}), "text.margin": "0", "text.margin.left": "6",
                      "text.margin.right": "6"},
         "Splitter": {"inherits": "PanelButtonCommand", **frame(0, "splitter", "splitter"),
                      "indicator.element": "splitter-grip", "indicator.size": "16"},
