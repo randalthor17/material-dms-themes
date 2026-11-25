@@ -94,6 +94,22 @@ def box(svg, name, f, rad, bg=None, border=None, interior=True):
             [edge_bg(x + f + L, y + f, f, L), bline(x + f + L + f - bw, y + f, bw, L)])
 
 
+def underline_box(svg, name, f, color, h=3):
+    """A framed element whose only mark is a bar of height h along the bottom edge (pieces: bottom and its corners)."""
+    x, y = svg.place(2 * f + EDGE, 2 * f + EDGE)
+    L = EDGE
+    bar = lambda bx, by, w: [rect(bx, by + f - h, w, h, color, 1)]  # noqa: E731
+    svg.obj(name, x + f, y + f, L, L, [])
+    for where, (px, py) in {"topleft": (x, y), "topright": (x + f + L, y)}.items():
+        svg.obj(f"{name}-{where}", px, py, f, f, [])
+    svg.obj(f"{name}-bottomleft", x, y + f + L, f, f, bar(x, y + f + L, f))
+    svg.obj(f"{name}-bottomright", x + f + L, y + f + L, f, f, bar(x + f + L, y + f + L, f))
+    svg.obj(f"{name}-bottom", x + f, y + f + L, L, f, bar(x + f, y + f + L, L))
+    svg.obj(f"{name}-top", x + f, y, L, f, [])
+    svg.obj(f"{name}-left", x, y + f, f, L, [])
+    svg.obj(f"{name}-right", x + f + L, y + f, f, L, [])
+
+
 def element(svg, name, f, rad, looks, interior=True):
     for state, (bg, border) in looks.items():
         box(svg, f"{name}-{state}", f, rad, bg, border, interior)
@@ -139,7 +155,9 @@ def build(p: Palette):
              "toggled": (None, None), "disabled": (None, None)}
     element(svg, "spin", 8, 8, flat8)
     element(svg, "header", 2, 0, flat8)
-    element(svg, "tab", 12, 12, {**flat8, "focused": (tint(PRI, .08), None), "pressed": (tint(PRI, .10), None)})
+    element(svg, "tab", 12, 12, {k: v for k, v in {**flat8, "focused": (tint(PRI, .08), None),
+                                                   "pressed": (tint(PRI, .10), None)}.items() if k != "toggled"})
+    underline_box(svg, "tab-toggled", 12, PRI)  # the selected tab: DMS marks it with a 3 px primary underline
     element(svg, "itemview", 8, 8, {**flat8, "toggled": (solid(SEC), None)})
     element(svg, "menuitem", 12, 12, {**flat8, "toggled": (tint(FG, .08), None)})
     element(svg, "menubaritem", 12, 12, {**flat8, "toggled": (tint(FG, .10), None)})
