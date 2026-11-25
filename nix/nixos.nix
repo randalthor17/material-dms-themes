@@ -4,9 +4,10 @@
 #  - a system-wide Flatpak override (flatpak override --system): the GTK, Kvantum and theme directories read-only and
 #    the style variables, the same as `material-dms-themes flatpak` writes per user
 # On the host: adw-gtk3 and the Kvantum Qt 5 and Qt 6 plugins. The user-side look is the home-manager module.
-self: { config, lib, pkgs, ... }:
+self: { config, lib, options, pkgs, ... }:
 let
   cfg = config.programs.material-dms-themes;
+  withNixFlatpak = options.services.flatpak ? packages;
   flatpak = "${pkgs.flatpak}/bin/flatpak";
   filesystems = [ "xdg-config/gtk-3.0:ro" "xdg-config/gtk-4.0:ro" "xdg-data/themes:ro" "xdg-config/kdeglobals:ro" "xdg-config/Kvantum:ro" "xdg-config/material-dms-themes:ro" ];
   script = pkgs.writeShellScript "material-dms-flatpak" ''
@@ -42,9 +43,10 @@ in {
     (lib.mkIf cfg.flatpak.enable {
       systemd.services.material-dms-flatpak = {
         description = "Flatpak theme extensions and override for material-dms-themes";
-        wantedBy = [ "multi-user.target" ];
         wants = [ "network-online.target" ];
-        after = [ "network-online.target" "flatpak-managed-install.service" ];
+        after = [ "network-online.target" ] ++ lib.optional withNixFlatpak "flatpak-managed-install.service";
+        # nix-flatpak's install unit runs after multi-user.target, so waiting for it from there is a cycle: hang off it instead
+        wantedBy = if withNixFlatpak then [ "flatpak-managed-install.service" ] else [ "multi-user.target" ];
         serviceConfig = { Type = "oneshot"; RemainAfterExit = true; ExecStart = script; };
         restartTriggers = [ script ];
       };
