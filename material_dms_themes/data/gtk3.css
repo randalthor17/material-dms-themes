@@ -178,7 +178,6 @@ notebook > header > tabs > tab:checked { color: @md_primary; box-shadow: inset 0
 /* --- misc ------------------------------------------------------------------------------------------------------ */
 infobar, .infobar { border-radius: 12px; background-color: @md_secondary_container; color: @md_on_secondary_container; }
 infobar.error { background-color: @md_error_container; color: @md_on_error_container; }
-frame, .frame { border: 1px solid @md_outline_variant; border-radius: 12px; }
 .dim-label, .caption, .dim { color: @md_on_surface_variant; }
 .accent { color: @md_primary; }
 .error { color: @md_error; }
