@@ -39,7 +39,7 @@ Without qtengine, select Kvantum with `QT_STYLE_OVERRIDE=kvantum`. With qtengine
     material-dms-themes flatpak --install-extensions  # also install the Kvantum extension for each KDE runtime
 
 The override exposes `gtk-3.0`, `gtk-4.0`, `themes`, `kdeglobals`, `Kvantum` and `material-dms-themes` read-only, and sets
-the KDE platform theme (runtimes have no qtengine), `QT_STYLE_OVERRIDE=kvantum` and the Quick Controls variables. Existing
+the KDE platform theme (runtimes have no qtengine) and `QT_STYLE_OVERRIDE=kvantum`; `--quick-controls` adds the Quick Controls variables (off by default: they apply to every QML program). Existing
 entries are kept and a `QT_QPA_PLATFORMTHEME` you set yourself is not replaced. `--print` shows it without writing; a
 symlinked override (home-manager's) is skipped. Kvantum in the sandbox needs `org.kde.KStyle.Kvantum` for each
 KDE runtime branch (`flatpak list --runtime`). Not yet tested with a real Flatpak app.
@@ -53,7 +53,7 @@ programs.material-dms-themes.enable = true;   # .gtk.enable / .kvantum.enable to
 ```
 
 This makes `gtk.css` a managed file (DMS only needs to write `dank-colors.css`), sets adw-gtk3, installs Kvantum and
-runs `watch` as a user service. `programs.material-dms-themes.flatpak.enable = true` also writes the Flatpak override (off by default, since only one module can own that file; otherwise merge `programs.material-dms-themes.flatpak.override` into yours).
+runs `watch` as a user service. For setups where DMS owns `gtk.css`, set `gtk.enable = false` and `gtk.activate = true`: no GTK file is managed, and `install --only gtk` runs at activation. Session-wide `QT_QUICK_CONTROLS_STYLE=Material` is opt-in (`quickControls.enable`), since it also reaches DMS's own QML. `programs.material-dms-themes.flatpak.enable = true` also writes the Flatpak override (off by default, since only one module can own that file; otherwise merge `programs.material-dms-themes.flatpak.override` into yours).
 
 ## Development
 

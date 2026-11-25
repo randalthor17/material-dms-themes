@@ -126,7 +126,7 @@ def install(args):
 def flatpak_cmd(args):
     home = str(Path.home())
     path = Path(args.data_dir or os.environ.get("XDG_DATA_HOME") or Path.home() / ".local" / "share") / "flatpak" / "overrides" / "global"
-    text = flatpak.merged(path.read_text() if path.exists() else "", home)
+    text = flatpak.merged(path.read_text() if path.exists() else "", home, args.quick_controls)
     if args.print:
         print(text, end="")
     else:
@@ -172,6 +172,7 @@ def main(argv=None):
     fp.add_argument("--data-dir", help="default ~/.local/share")
     fp.add_argument("--print", action="store_true", help="print the override instead of writing it")
     fp.add_argument("--install-extensions", action="store_true", help="install the Kvantum extension for each KDE runtime")
+    fp.add_argument("--quick-controls", action="store_true", help="also set the Quick Controls Material style and conf")
     fp.set_defaults(fn=flatpak_cmd)
     pg = sub.add_parser("print-gtk", help="print material-dms.css for GTK 3 or 4")
     pg.add_argument("version", type=int, choices=(3, 4))

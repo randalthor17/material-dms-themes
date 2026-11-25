@@ -10,6 +10,10 @@ let
     @import url("dank-colors.css");
     @import url("material-dms.css");
   '';
+  quick = lib.optionalAttrs cfg.quickControls.enable {
+    QT_QUICK_CONTROLS_STYLE = "Material";
+    QT_QUICK_CONTROLS_CONF = "${config.xdg.configHome}/material-dms-themes/qtquickcontrols2.conf";
+  };
   # the named GTK theme, importing DMS's dank-colors.css by absolute path
   theme = pkgs.runCommand "material-dms-gtk-theme" { } "${cfg.package}/bin/material-dms-themes build-theme $out --config-dir ${config.xdg.configHome} --adw-gtk3 ${pkgs.adw-gtk3}/share/themes/adw-gtk3";
 in {
@@ -17,6 +21,8 @@ in {
     enable = lib.mkEnableOption "the DankMaterialShell look for GTK and Qt apps, on DMS's colors";
     package = lib.mkOption { type = lib.types.package; default = pkg; };
     gtk.enable = lib.mkOption { type = lib.types.bool; default = true; description = "Install the GTK 3/4 stylesheet and set adw-gtk3 for GTK 3. gtk.css becomes a managed file; DMS only needs to write dank-colors.css."; };
+    gtk.activate = lib.mkOption { type = lib.types.bool; default = false; description = "For setups where DMS owns gtk.css: do not manage any GTK file; at activation run `material-dms-themes install --only gtk`, which adds the import to gtk.css only if missing and writes the MaterialDMS theme as real files. Use with gtk.enable = false."; };
+    quickControls.enable = lib.mkOption { type = lib.types.bool; default = false; description = "Set QT_QUICK_CONTROLS_STYLE=Material (and the conf in DMS's colors) for every session and Flatpak app. Off by default: it applies to all QML programs, DMS's own included."; };
     kvantum.enable = lib.mkOption { type = lib.types.bool; default = true; description = "Install Kvantum and keep the MaterialDMS theme in step with DMS's palette."; };
     flatpak = {
       enable = lib.mkOption { type = lib.types.bool; default = false; description = "Write the user-wide Flatpak override that exposes the themes to sandboxed apps (~/.local/share/flatpak/overrides/global). Off by default: only one module can define that file, so if you already have one, merge programs.material-dms-themes.flatpak.override into it instead."; };
@@ -34,9 +40,7 @@ in {
           QT_QPA_PLATFORMTHEME = "kde";
           QT_QPA_PLATFORMTHEME_QT6 = "kde";
           QT_STYLE_OVERRIDE = "kvantum";
-          QT_QUICK_CONTROLS_STYLE = "Material";
-          QT_QUICK_CONTROLS_CONF = "${config.xdg.configHome}/material-dms-themes/qtquickcontrols2.conf";
-        };
+        } // quick;
       };
     }
 
@@ -52,6 +56,13 @@ in {
       };
     })
 
+    (lib.mkIf cfg.gtk.activate {
+      home.packages = [ pkgs.adw-gtk3 ];
+      home.activation.materialDmsGtk = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        run ${cfg.package}/bin/material-dms-themes install --only gtk
+      '';
+    })
+
     (lib.mkIf cfg.flatpak.enable {
       xdg.dataFile."flatpak/overrides/global".text = lib.generators.toINI { } {
         Context.filesystems = lib.concatStringsSep ";" cfg.flatpak.override.Context.filesystems;
@@ -61,10 +72,7 @@ in {
 
     (lib.mkIf cfg.kvantum.enable {
       home.packages = [ pkgs.qt6Packages.qtstyleplugin-kvantum pkgs.libsForQt5.qtstyleplugin-kvantum ];
-      home.sessionVariables = {
-        QT_QUICK_CONTROLS_STYLE = "Material";
-        QT_QUICK_CONTROLS_CONF = "${config.xdg.configHome}/material-dms-themes/qtquickcontrols2.conf";
-      };
+      home.sessionVariables = quick;
       systemd.user.services.material-dms-themes = {
         Unit = { Description = "Material DMS Kvantum theme follows DMS's palette"; PartOf = [ "graphical-session.target" ]; After = [ "graphical-session.target" ]; };
         Service = {

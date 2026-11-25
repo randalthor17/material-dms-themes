@@ -15,12 +15,13 @@ FILESYSTEMS = [
 ]
 # set when absent: a value the user already chose is theirs. The first two stop the host's qtengine leaking in.
 ENV_DEFAULT = {"QT_QPA_PLATFORMTHEME": "kde", "QT_QPA_PLATFORMTHEME_QT6": "kde"}
-ENV_FORCED = {"QT_STYLE_OVERRIDE": "kvantum", "QT_QUICK_CONTROLS_STYLE": "Material",
-              "QT_QUICK_CONTROLS_CONF": "{home}/.config/material-dms-themes/qtquickcontrols2.conf"}
+ENV_FORCED = {"QT_STYLE_OVERRIDE": "kvantum"}
+ENV_QUICK = {"QT_QUICK_CONTROLS_STYLE": "Material",  # opt in: it applies to every QML program
+             "QT_QUICK_CONTROLS_CONF": "{home}/.config/material-dms-themes/qtquickcontrols2.conf"}
 EXTENSION = "org.kde.KStyle.Kvantum"
 
 
-def merged(existing_text, home):
+def merged(existing_text, home, quick=False):
     """The override file text with our paths and variables added; everything else in it is kept."""
     cp = configparser.RawConfigParser(delimiters=("=",))
     cp.optionxform = str
@@ -34,7 +35,7 @@ def merged(existing_text, home):
     for k, v in ENV_DEFAULT.items():
         if not cp.has_option("Environment", k):
             cp.set("Environment", k, v)
-    for k, v in ENV_FORCED.items():
+    for k, v in {**ENV_FORCED, **(ENV_QUICK if quick else {})}.items():
         cp.set("Environment", k, v.format(home=home))
     out = io.StringIO()
     cp.write(out, space_around_delimiters=False)
