@@ -1,0 +1,205 @@
+/* Material DMS: adw-gtk3 (GTK 3) drawn like DankMaterialShell.
+   Shapes: 12 px corners (cards, items), 16 px windows, pill buttons, 4 px filled text fields. State layers are the
+   text color at 8% hovered / 10% pressed, as DMS draws them. Colors are the md_* names from material-dms-colors.css. */
+
+/* --- focus ---------------------------------------------------------------------------------------------- */
+*:focus-visible { outline: 2px solid @md_primary; outline-offset: 2px; }
+
+/* --- buttons: filled (suggested), tonal (default), text (flat), outlined ---------------------------------- */
+button {
+  min-height: 24px; padding: 6px 16px; border-radius: 999px;
+  background-color: @md_secondary_container; background-image: none; color: @md_on_secondary_container;
+  border: none; box-shadow: none; font-weight: 500;
+  transition: background-color 200ms cubic-bezier(.34, .8, .34, 1), border-radius 200ms cubic-bezier(.34, .8, .34, 1);
+}
+button:hover { background-image: linear-gradient(alpha(@md_on_secondary_container, .08), alpha(@md_on_secondary_container, .08)); }
+button:active, button:checked { background-image: linear-gradient(alpha(@md_on_secondary_container, .10), alpha(@md_on_secondary_container, .10)); border-radius: 12px; }
+button:disabled { background-color: alpha(@md_on_surface, .10); color: alpha(@md_on_surface, .38); background-image: none; }
+
+button.suggested-action, button.suggested-action:checked { background-color: @md_primary; color: @md_on_primary; }
+button.suggested-action:hover { background-image: linear-gradient(alpha(@md_on_primary, .08), alpha(@md_on_primary, .08)); }
+button.suggested-action:active { background-image: linear-gradient(alpha(@md_on_primary, .10), alpha(@md_on_primary, .10)); }
+button.destructive-action { background-color: @md_error; color: @md_on_error; }
+button.destructive-action:hover { background-image: linear-gradient(alpha(@md_on_error, .08), alpha(@md_on_error, .08)); }
+
+button.flat, .titlebar button, headerbar button, toolbar button, .toolbar button {
+  background-color: transparent; background-image: none; color: @md_on_surface;
+}
+button.flat:hover, headerbar button:hover, toolbar button:hover { background-image: linear-gradient(alpha(@md_on_surface, .08), alpha(@md_on_surface, .08)); }
+button.flat:active, button.flat:checked, headerbar button:active, headerbar button:checked, toolbar button:checked {
+  background-color: @md_secondary_container; background-image: none; color: @md_on_secondary_container; }
+button.flat:disabled, headerbar button:disabled { background-color: transparent; color: alpha(@md_on_surface, .38); }
+
+button.text-button.flat { color: @md_primary; }
+button.circular, button.image-button { padding: 6px; min-width: 24px; }
+button.pill { padding: 10px 32px; }
+button.osd { background-color: alpha(@md_inverse_surface, .9); color: @md_inverse_on_surface; }
+.linked > button { border-radius: 4px; margin: 0 1px; }
+.linked > button:first-child { border-radius: 999px 4px 4px 999px; }
+.linked > button:last-child { border-radius: 4px 999px 999px 4px; }
+.linked > button:only-child { border-radius: 999px; }
+.linked.vertical > button:first-child { border-radius: 12px 12px 4px 4px; }
+.linked.vertical > button:last-child { border-radius: 4px 4px 12px 12px; }
+
+/* --- text fields: filled, 4 px corners, 1 px outline-variant that becomes a 2 px primary ring on focus ---- */
+entry, spinbutton, .view.search, searchbar entry {
+  min-height: 32px; padding: 4px 12px; border-radius: 4px; border: 1px solid @md_outline_variant;
+  background-color: @md_surface_container_high; background-image: none; color: @md_on_surface; box-shadow: none; outline: none;
+  transition: border-color 200ms cubic-bezier(.34, .8, .34, 1);
+}
+entry:focus, spinbutton:focus { border: 2px solid @md_primary; padding: 3px 11px; }
+entry:disabled, spinbutton:disabled { background-color: alpha(@md_on_surface, .04); color: alpha(@md_on_surface, .38); }
+entry.error, entry.error:focus-within { border-color: @md_error; }
+entry selection, textview selection, label selection { background-color: alpha(@md_primary, .35); color: @md_on_surface; }
+spinbutton button { border-radius: 4px; min-width: 24px; padding: 0; background-color: transparent; }
+spinbutton entry { border: none; background: none; padding: 0; }
+searchbar entry, entry.search { border-radius: 999px; }
+
+/* --- switch: DMS's 52 x 32 track, 16 px thumb that grows to 24 when on ------------------------------------ */
+switch {
+  min-width: 48px; min-height: 28px; border-radius: 999px; padding: 0; margin: 2px 0;
+  background-color: @md_surface_container_highest; background-image: none; border: 2px solid @md_outline; box-shadow: none;
+  transition: background-color 200ms cubic-bezier(.34, .8, .34, 1), border-color 200ms cubic-bezier(.34, .8, .34, 1);
+}
+switch:hover { background-image: linear-gradient(alpha(@md_on_surface, .08), alpha(@md_on_surface, .08)); }
+switch:checked { background-color: @md_primary; border-color: @md_primary; }
+switch:checked:hover { background-image: linear-gradient(alpha(@md_on_primary, .08), alpha(@md_on_primary, .08)); }
+switch:disabled { background-color: alpha(@md_on_surface, .12); border-color: alpha(@md_on_surface, .12); }
+switch slider {
+  min-width: 16px; min-height: 16px; margin: 6px; border-radius: 999px; border: none; box-shadow: none;
+  background-color: @md_outline; background-image: none;
+  transition: all 200ms cubic-bezier(.34, .8, .34, 1);
+}
+switch:checked slider { min-width: 24px; min-height: 24px; margin: 2px; background-color: @md_on_primary; }
+switch:active slider { min-width: 28px; min-height: 28px; margin: 0; }
+switch:disabled slider { background-color: alpha(@md_on_surface, .38); }
+switch image { color: transparent; }
+
+/* --- check boxes and radios: 18 px, 2 px outline, primary when set ------------------------------------------ */
+check, radio {
+  min-width: 18px; min-height: 18px; margin: 2px; padding: 0; background-color: transparent; background-image: none;
+  border: 2px solid @md_on_surface_variant; color: @md_on_primary; box-shadow: none; -gtk-icon-source: none;
+}
+check { border-radius: 2px; }
+radio { border-radius: 999px; }
+check:hover, radio:hover { border-color: @md_on_surface; }
+check:checked, check:indeterminate, radio:checked { background-color: @md_primary; border-color: @md_primary; }
+check:checked { -gtk-icon-source: -gtk-icontheme("object-select-symbolic"); }
+check:indeterminate { -gtk-icon-source: -gtk-icontheme("list-remove-symbolic"); }
+radio:checked { -gtk-icon-source: -gtk-icontheme("media-record-symbolic"); }
+check:disabled, radio:disabled { border-color: alpha(@md_on_surface, .38); }
+check:checked:disabled, radio:checked:disabled { background-color: alpha(@md_on_surface, .38); border-color: transparent; }
+
+/* --- sliders: DMS's 24 px track, 4 px handle with a gap; active track in primary --------------------------- */
+scale trough {
+  background-color: alpha(@md_secondary_container, .6); border: none; border-radius: 8px; box-shadow: none;
+}
+scale.horizontal trough { min-height: 24px; }
+scale.vertical trough { min-width: 24px; }
+scale highlight { background-color: @md_primary; border-radius: 8px; border: none; }
+scale slider {
+  background-color: @md_primary; background-image: none; border: none; box-shadow: none; border-radius: 999px;
+}
+scale.horizontal slider { min-width: 4px; min-height: 36px; margin: -6px 0; }
+scale.vertical slider { min-width: 36px; min-height: 4px; margin: 0 -6px; }
+scale slider:active { min-width: 2px; }
+scale.vertical slider:active { min-height: 2px; min-width: 36px; }
+scale:disabled highlight { background-color: alpha(@md_on_surface, .38); }
+scale:disabled trough { background-color: alpha(@md_on_surface, .12); }
+scale marks, scale indicator { color: @md_on_surface_variant; }
+
+/* --- progress ------------------------------------------------------------------------------------------- */
+progressbar trough { background-color: @md_secondary_container; border-radius: 999px; border: none; min-height: 8px; }
+progressbar.vertical trough { min-width: 8px; }
+progressbar progress { background-color: @md_primary; border-radius: 999px; border: none; min-height: 8px; }
+progressbar.vertical progress { min-width: 8px; }
+levelbar block.filled { background-color: @md_primary; border-radius: 999px; }
+levelbar block.empty { background-color: @md_secondary_container; border-radius: 999px; }
+levelbar block.filled.high { background-color: @md_error; }
+
+/* --- scrollbars: thin pills ----------------------------------------------------------------------------- */
+scrollbar slider { background-color: alpha(@md_on_surface, .30); border-radius: 999px; min-width: 6px; min-height: 6px; }
+scrollbar slider:hover { background-color: alpha(@md_on_surface, .50); }
+scrollbar slider:active { background-color: alpha(@md_on_surface, .70); }
+scrollbar.overlay-indicator:not(.hovering) slider { min-width: 3px; min-height: 3px; }
+scrollbar trough { background: none; border: none; }
+
+/* --- windows, headers, dialogs --------------------------------------------------------------------------- */
+window.background { background-color: @md_surface; color: @md_on_surface; }
+window.csd, window.csd decoration { border-radius: 16px; }
+window.dialog.message, window.messagedialog, window.dialog.csd { border-radius: 28px; }
+window.dialog.message .dialog-action-area button, .response-area button { padding: 6px 24px; }
+headerbar, .titlebar { background-color: @md_surface; background-image: none; box-shadow: none; border-bottom: none; color: @md_on_surface; min-height: 48px; }
+headerbar:backdrop { background-color: @md_surface; color: @md_on_surface_variant; }
+headerbar .title, .title { font-weight: 500; }
+windowcontrols button { min-width: 32px; min-height: 32px; padding: 0; border-radius: 999px; }
+windowcontrols button.close:hover { background-color: @md_error; color: @md_on_error; background-image: none; }
+separator { background-color: @md_outline_variant; min-width: 1px; min-height: 1px; }
+toolbar, .toolbar, actionbar > revealer > box { background-color: transparent; padding: 4px; }
+searchbar, .search-bar { background-color: @md_surface; }
+
+/* --- menus, popovers, tooltips ---------------------------------------------------------------------------- */
+popover.background, popover.background.menu {
+  background-color: @md_surface_container; color: @md_on_surface; border-radius: 16px; padding: 4px;
+  border: 1px solid alpha(@md_outline_variant, .6); box-shadow: 0 4px 12px alpha(black, .35);
+}
+popover modelbutton, popover.menu modelbutton { border-radius: 12px; padding: 6px 12px; min-height: 32px; }
+popover modelbutton:hover, popover modelbutton:focus { background-color: alpha(@md_on_surface, .08); }
+popover modelbutton:active { background-color: alpha(@md_on_surface, .10); }
+popover separator { margin: 4px 8px; }
+tooltip, tooltip.background { background-color: @md_inverse_surface; color: @md_inverse_on_surface; border-radius: 8px; box-shadow: none; }
+tooltip label { color: @md_inverse_on_surface; }
+
+/* --- lists, sidebars, cards ------------------------------------------------------------------------------- */
+list, listview, .boxed-list, columnview { background-color: transparent; color: @md_on_surface; }
+row { border-radius: 12px; }
+row:hover { background-color: alpha(@md_on_surface, .08); }
+row:selected, row:selected:hover { background-color: @md_secondary_container; color: @md_on_secondary_container; }
+row:active { background-color: alpha(@md_on_surface, .10); }
+.boxed-list, list.boxed-list, .card, .content { background-color: @md_surface_container; border-radius: 12px; border: none; box-shadow: none; }
+.boxed-list > row, list.boxed-list > row { border-radius: 0; }
+.boxed-list > row:first-child { border-radius: 12px 12px 0 0; }
+.boxed-list > row:last-child { border-radius: 0 0 12px 12px; }
+.boxed-list > row:only-child { border-radius: 12px; }
+.navigation-sidebar { background-color: transparent; padding: 4px; }
+.navigation-sidebar > row, .navigation-sidebar row { border-radius: 12px; margin: 1px 4px; padding: 2px 4px; }
+.sidebar-pane, .sidebar, .navigation-sidebar, widget.sidebar { background-color: @md_surface_container_low; }
+.view, textview, iconview, treeview.view, columnview > listview { background-color: @md_surface_container_low; color: @md_on_surface; }
+treeview.view:selected, .view:selected, iconview:selected, textview text:selected { background-color: @md_secondary_container; color: @md_on_secondary_container; }
+treeview.view:hover { background-color: alpha(@md_on_surface, .08); }
+
+/* --- tabs ---------------------------------------------------------------------------------------------------- */
+notebook > header { background-color: @md_surface; border: none; box-shadow: inset 0 -1px @md_outline_variant; }
+notebook > header > tabs > tab {
+  min-height: 48px; padding: 0 16px; border: none; border-radius: 12px 12px 0 0; background: none; color: @md_on_surface_variant; font-weight: 500; }
+notebook > header > tabs > tab:hover { background-color: alpha(@md_primary, .08); }
+notebook > header > tabs > tab:checked { color: @md_primary; box-shadow: inset 0 -3px @md_primary; }
+
+/* --- misc ------------------------------------------------------------------------------------------------------ */
+infobar, .infobar { border-radius: 12px; background-color: @md_secondary_container; color: @md_on_secondary_container; }
+infobar.error { background-color: @md_error_container; color: @md_on_error_container; }
+frame, .frame { border: 1px solid @md_outline_variant; border-radius: 12px; }
+.dim-label, .caption, .dim { color: @md_on_surface_variant; }
+.accent { color: @md_primary; }
+.error { color: @md_error; }
+.osd { background-color: alpha(@md_inverse_surface, .92); color: @md_inverse_on_surface; border-radius: 16px; }
+calendar { border-radius: 12px; }
+calendar:selected { background-color: @md_primary; color: @md_on_primary; border-radius: 999px; }
+
+/* --- GTK 3 specifics: menus and menu bars, the old header bar, tree views ------------------------------------ */
+menu, .menu, .context-menu {
+  background-color: @md_surface_container; color: @md_on_surface; border-radius: 16px; padding: 4px;
+  border: 1px solid alpha(@md_outline_variant, .6);
+}
+menuitem { border-radius: 12px; padding: 6px 12px; min-height: 24px; color: @md_on_surface; }
+menuitem:hover { background-color: alpha(@md_on_surface, .08); }
+menuitem:disabled { color: alpha(@md_on_surface, .38); }
+menubar, .menubar { background-color: @md_surface; color: @md_on_surface; }
+menubar > menuitem { border-radius: 999px; padding: 4px 12px; }
+popover.background { padding: 4px; }
+entry placeholder, entry:disabled placeholder { color: @md_on_surface_variant; }
+treeview.view header button { border-radius: 0; background-color: @md_surface_container; color: @md_on_surface_variant; }
+.sidebar row:selected, placessidebar row:selected { background-color: @md_secondary_container; color: @md_on_secondary_container; }
+placessidebar row { border-radius: 12px; margin: 1px 4px; }
+button:focus, entry:focus, switch:focus, scale:focus { outline-offset: 2px; }
+check:checked, check:indeterminate, radio:checked { background-clip: border-box; }

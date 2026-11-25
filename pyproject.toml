@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "material-dms-themes"
+version = "0.1.0"
+description = "GTK, KDE and Kvantum themes drawn like DankMaterialShell, in its colors"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+
+[project.scripts]
+material-dms-themes = "material_dms_themes.cli:main"
+
+[tool.setuptools]
+packages = ["material_dms_themes"]
+
+[tool.setuptools.package-data]
+material_dms_themes = ["data/*.css"]

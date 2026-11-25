@@ -1,0 +1,23 @@
+/* Material DMS: the Material roles the look below uses, built from the names DMS's dank-colors.css defines
+   (window_*, view_*, card_*, popover_*, accent_*, error_*). Nothing here is a color of its own, so the look
+   follows DMS's palette, dark or light, with no regeneration. Roles DMS does not name are mixes of those that it does. */
+@define-color md_primary @accent_bg_color;
+@define-color md_on_primary @accent_fg_color;
+@define-color md_error @error_bg_color;
+@define-color md_on_error @error_fg_color;
+@define-color md_on_surface @window_fg_color;
+@define-color md_surface @window_bg_color;
+@define-color md_surface_container_low @view_bg_color;
+@define-color md_surface_container @card_bg_color;
+@define-color md_surface_container_high mix(@card_bg_color, @window_fg_color, 0.04);
+@define-color md_surface_container_highest mix(@card_bg_color, @window_fg_color, 0.08);
+@define-color md_on_surface_variant mix(@window_fg_color, @window_bg_color, 0.30);
+@define-color md_outline mix(@window_fg_color, @window_bg_color, 0.55);
+@define-color md_outline_variant mix(@window_fg_color, @window_bg_color, 0.78);
+@define-color md_secondary_container mix(@window_bg_color, @accent_bg_color, 0.22);
+@define-color md_on_secondary_container mix(@window_fg_color, @accent_bg_color, 0.30);
+@define-color md_error_container mix(@window_bg_color, @error_bg_color, 0.30);
+@define-color md_on_error_container @error_bg_color;
+@define-color md_inverse_surface @window_fg_color;
+@define-color md_inverse_on_surface @window_bg_color;
+@define-color md_shadow black;
