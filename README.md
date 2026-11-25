@@ -35,6 +35,12 @@ Without qtengine, select Kvantum with `QT_STYLE_OVERRIDE=kvantum`. With qtengine
 
 ## Flatpak
 
+On NixOS the system module does all of this by itself, with no CLI step: `nixosModules.default` with `programs.material-dms-themes.enable = true`
+installs adw-gtk3 and the Kvantum Qt 5/6 plugins on the host and, whenever `services.flatpak.enable` is on, runs a oneshot service
+that installs the `org.gtk.Gtk3theme.adw-gtk3` (and `-dark`) extensions and `org.kde.KStyle.Kvantum` for each installed
+KDE runtime branch (system installation, after nix-flatpak's install), and sets a system-wide override with the paths and
+`QT_STYLE_OVERRIDE=kvantum` below. Elsewhere, the CLI does the same per user:
+
     material-dms-themes flatpak                       # merge the override into ~/.local/share/flatpak/overrides/global
     material-dms-themes flatpak --install-extensions  # also install the Kvantum extension for each KDE runtime
 
@@ -43,6 +49,15 @@ the KDE platform theme (runtimes have no qtengine) and `QT_STYLE_OVERRIDE=kvantu
 entries are kept and a `QT_QPA_PLATFORMTHEME` you set yourself is not replaced. `--print` shows it without writing; a
 symlinked override (home-manager's) is skipped. Kvantum in the sandbox needs `org.kde.KStyle.Kvantum` for each
 KDE runtime branch (`flatpak list --runtime`). Not yet tested with a real Flatpak app.
+
+### NixOS
+
+```nix
+imports = [ inputs.material-dms-themes.nixosModules.default ];
+programs.material-dms-themes.enable = true;   # .flatpak.enable follows services.flatpak.enable
+```
+
+This is the system side (host packages, Flatpak). The per-user look is the home-manager module below.
 
 ### home-manager
 
