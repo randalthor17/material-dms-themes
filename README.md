@@ -47,7 +47,7 @@ KDE runtime branch (`flatpak list --runtime`). Not yet tested with a real Flatpa
 ### home-manager
 
 ```nix
-inputs.material-dms-themes.url = "github:OWNER/material-dms-themes";
+inputs.material-dms-themes.url = "github:randalthor17/material-dms-themes";
 imports = [ inputs.material-dms-themes.homeManagerModules.default ];
 programs.material-dms-themes.enable = true;   # .gtk.enable / .kvantum.enable to pick one
 ```
